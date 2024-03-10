@@ -2,7 +2,7 @@
 
 一个文件夹实时备份工具，使用 *Rust* 编写。
 
-该程序是 WSMCS 服务器工具的一部分。
+该程序是[ WSMCS 服务器](https://www.wsmcs.top)工具的一部分。
 
 ## 使用
 
@@ -17,3 +17,8 @@
 `but --init`
 
 修改配置文件即可使用。
+
+## 主要贡献者（排名不分先后）
+
+1. [Stevesuk](https://github.com/Stevesuk0)
+2. [刘andy](https://github.com/liulyxandy-codemao)
