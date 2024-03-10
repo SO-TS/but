@@ -1,20 +1,16 @@
 # but
 
-一个文件夹实时备份工具，使用 *Python* 编写。
+一个文件夹实时备份工具，使用 *Rust* 编写。
 
 该程序是 WSMCS 服务器工具的一部分。
 
 ## 使用
 
-我们并没有公开任何的二进制可执行文件。因此您需要安装 [Python](https://python.org) 并克隆该项目的源代码。
+我们提供了二进制可执行文件。您只需要下载target/release中的but.exe即可运行。
 
-如果您安装了 Git:
+如果您使用的不是 Windows:
 
-`git clone git@github.com:SO-TS/but.git`
-
-如果您没有 Git:
-
-[下载 zip 归档](https://github.com/SO-TS/but/archive/refs/heads/main.zip)
+您可以手动克隆项目到本地进行编译。项目流水线以后也会自动编译制品，可在Github Actions下载。
 
 在第一次使用时，您需要输入该命令生成配置文件：
 
