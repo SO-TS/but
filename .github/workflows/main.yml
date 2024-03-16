@@ -1,0 +1,59 @@
+name: Build Artifacts
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-20.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev
+
+      - name: Rust setup
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+
+      - name: Build App
+        run: cargo build -r
+
+      - name: Upload Artifact (windows)
+        if: matrix.platform == 'windows-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ButInRust-build-windows
+          path: target/release/*.exe
+
+
+      - name: Upload Artifact (macos)
+        if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ButInRust-build-macos
+          path: target/release/bundle/dmg/*.dmg
+
+
+      - name: Upload Artifact (ubuntu)
+        if: matrix.platform == 'ubuntu-20.04'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ButInRust-build-linux
+          path: target/release/bundle/
