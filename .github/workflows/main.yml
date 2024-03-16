@@ -35,6 +35,9 @@ jobs:
       - name: Build App
         run: cargo build -r
 
+      - name: Show dir
+        run: ls & pwd & ll
+
       - name: Upload Artifact (windows)
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v3
