@@ -41,7 +41,7 @@ jobs:
 
       - name: Show dir (others)
         if: matrix.platform != 'windows-latest'
-        run: cd target & ls
+        run: cd target; ls
 
       - name: Upload Artifact (windows)
         if: matrix.platform == 'windows-latest'
