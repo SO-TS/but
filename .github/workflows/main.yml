@@ -1,9 +1,9 @@
 name: Build Artifacts
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -35,15 +35,20 @@ jobs:
       - name: Build App
         run: cargo build -r
 
-      - name: Show dir
-        run: ls & pwd & ll
+      - name: Show dir (windows)
+        if: matrix.platform == 'windows-latest'
+        run: cd target & dir
+
+      - name: Show dir (others)
+        if: matrix.platform != 'windows-latest'
+        run: cd target & ls
 
       - name: Upload Artifact (windows)
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
           name: ButInRust-build-windows
-          path: target/release/*.exe
+          path: ./target/release/*.exe
 
 
       - name: Upload Artifact (macos)
@@ -51,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ButInRust-build-macos
-          path: target/release/bundle/dmg/*.dmg
+          path: ./target/release/bundle/dmg/*.dmg
 
 
       - name: Upload Artifact (ubuntu)
@@ -59,4 +64,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ButInRust-build-linux
-          path: target/release/bundle/
+          path: ./target/release/bundle/
