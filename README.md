@@ -20,6 +20,6 @@
 
 ## 贡献者（排名不分先后）
 
-<a href="https://github.com/eryajf/learn-github/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=eryajf/learn-github" />
+<a href="https://github.com/SO-TS/but/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=SO-TS/but" />
 </a>
