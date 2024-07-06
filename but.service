@@ -1,0 +1,14 @@
+[Unit]
+Description=But it's just another file backup program.
+After=
+Wants=
+
+[Service]
+Restart=always
+Type=simple
+ExecStart=/usr/local/bin/but
+ExecStop=pkill -0 but
+Environment=
+
+[Install]
+WantedBy=multi-user.target

@@ -6,17 +6,50 @@
 
 ## 使用
 
-我们提供了二进制可执行文件。您只需要下载 target/release 中的 but.exe 即可运行。
+打开 Actions 页面，下载最新发布的二进制文件。
 
-如果您使用的不是 Windows:
+## 软件配置
 
-您可以手动克隆项目到本地进行编译。也可在 GitHub Actions 下载自动编译制品。
+### 配置文件示例
+```json
+{
+  "backup": [
+    {
+      "name": "save",
+      "from": "/home/mcseekeri/.local/share/PrismLauncher/instances/WSMCS/.minecraft/saves/",
+      "dest": "./"
+    },
+    {
+      "name": "Server",
+      "from": "/opt/MCSManager/data/InstanceData/",
+      "dest": "./"
+    }
+  ],
+  "settings": {
+    "interval": 300,
+    "saving_name": "%name%-%timestamp%",
+    "compression": "zstd"
+  }
+}
+```
+## 配置文件位置
+but 将依次在 `/etc/but.json` `$HOME/.config/but.json` 和 `./but.json` 三个位置寻找配置文件，优先级从高到低。
 
-在第一次使用时，您需要输入该命令生成配置文件：
+### 作为系统服务运行
 
-`but --init`
+将 `but.service` 文件复制到 `/etc/systemd/system/` 目录，并执行以下命令：
 
-修改配置文件即可使用。
+```bash
+systemctl daemon-reload
+systemctl enable --now but
+```
+
+> 如果启动出错，可以输入`systemctl status but`查看错误日志。
+
+## 备份原理
+
+限于技术原因，but 不支持增量备份，每次备份都会是完整备份。
+不过为了节约空间，当指定目录未发生变化时，but 不会重复备份。
 
 ## 贡献者（排名不分先后）
 
