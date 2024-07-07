@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use std::env;
-use std::fs::{self, File};
+use std::fs::File;
 use std::io::{Read, Seek, Write};
 use std::path::{Path, PathBuf};
 use std::process::exit;
@@ -91,12 +90,10 @@ fn load_config() -> Result<Config, std::io::Error> {
     ))
 }
 
-fn start_listen(verbose: bool) {
+fn start_listen() {
     let mut now = SystemTime::now();
     println!("开始备份监听。");
 
-    let mut last_meta: HashMap<String, HashMap<String, u64>> = HashMap::new();
-    let mut no_change_notified: HashMap<String, bool> = HashMap::new();
     let current_config = load_config().unwrap_or_else(|e| {
         eprintln!("配置文件无法加载，原因为: {}", e);
         exit(1);
@@ -107,32 +104,13 @@ fn start_listen(verbose: bool) {
 
         if now.elapsed().unwrap().as_secs() > current_config.settings.interval {
             for (i, item) in current_config.backup.iter().enumerate() {
-                let mut changed_files = Vec::new();
-                let mut current_meta = HashMap::new();
+                let mut files = Vec::new();
 
                 for entry in WalkDir::new(&item.from) {
                     let entry = entry.unwrap();
                     let path = entry.path();
                     if path.is_file() {
-                        let meta = fs::metadata(path).unwrap();
-                        let last_modified = meta
-                            .modified()
-                            .unwrap()
-                            .duration_since(UNIX_EPOCH)
-                            .unwrap()
-                            .as_secs();
-                        current_meta.insert(path.to_string_lossy().to_string(), last_modified);
-
-                        if let Some(last_modified_old) = last_meta
-                            .get(&item.name)
-                            .and_then(|meta| meta.get(&path.to_string_lossy().to_string()))
-                        {
-                            if *last_modified_old != last_modified {
-                                changed_files.push(path.to_string_lossy().to_string());
-                            }
-                        } else {
-                            changed_files.push(path.to_string_lossy().to_string());
-                        }
+                        files.push(path.to_string_lossy().to_string());
                     }
                 }
 
@@ -142,12 +120,6 @@ fn start_listen(verbose: bool) {
                     current_config.backup.len(),
                     item.name
                 );
-                if verbose {
-                    println!("自上次备份至今变动的文件列表:");
-                    for file in changed_files {
-                        println!("{}", file);
-                    }
-                }
 
                 let backup_name = format!(
                     "{}-{}",
@@ -174,9 +146,6 @@ fn start_listen(verbose: bool) {
                     &current_config.settings.compression,
                 )
                 .expect("压缩失败");
-
-                last_meta.insert(item.name.clone(), current_meta);
-                no_change_notified.insert(item.name.clone(), false);
 
                 println!("本次备份全部完成。");
             }
@@ -248,7 +217,6 @@ fn help() {
 
 配置操作:
     -i, -g, --init         生成配置文件
-    -v                     详细输出
     -V                     显示版本信息
 
 如果您是第一次使用，请输入 "but --init" 生成配置文件。
@@ -260,8 +228,7 @@ fn help() {
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     match args.get(1).map(|arg| arg.as_str()) {
-        None => start_listen(false),
-        Some("-v") => start_listen(true),
+        None => start_listen(),
         Some("--version") | Some("-V") | Some("--about") => about(),
         Some("-i") | Some("-g") | Some("--init") => init_config(),
         _ => help(),
