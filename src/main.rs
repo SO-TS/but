@@ -162,7 +162,7 @@ fn compress_folder(
 ) -> Result<(), Box<dyn std::error::Error>> {
     match compression {
         Compression::Zip => {
-            let zipfile = std::fs::File::create(dest).unwrap();
+            let zipfile = File::create(dest).unwrap();
             let dir = WalkDir::new(from);
             zip_dir(&mut dir.into_iter().filter_map(|e| e.ok()), from, zipfile)?;
         }
