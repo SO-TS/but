@@ -37,6 +37,8 @@ but 将依次在 `/etc/but.json` `$HOME/.config/but.json` 和 `./but.json` 三�
 
 ### 作为系统服务运行
 
+要作为系统服务运行，你需要将 `but` 放在 `/usr/local/bin` 目录下。为了减少工作量，你可以执行 `ln -s <but的完整目录>  /usr/local/bin/but` 以创建软链接。
+
 将 `but.service` 文件复制到 `/etc/systemd/system/` 目录，并执行以下命令：
 
 ```bash
@@ -45,11 +47,6 @@ systemctl enable --now but
 ```
 
 > 如果启动出错，可以输入`systemctl status but`查看错误日志。
-
-## 备份原理
-
-限于技术原因，but 不支持增量备份，每次备份都会是完整备份。
-不过为了节约空间，当指定目录未发生变化时，but 不会重复备份。
 
 ## 贡献者（排名不分先后）
 
