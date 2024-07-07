@@ -162,25 +162,25 @@ fn compress_folder(
 ) -> Result<(), Box<dyn std::error::Error>> {
     match compression {
         Compression::Zip => {
-            let zipfile = File::create(dest).unwrap();
+            let zipfile = File::create(dest)?;
             let dir = WalkDir::new(from);
             zip_dir(&mut dir.into_iter().filter_map(|e| e.ok()), from, zipfile)?;
         }
         Compression::Zstd => {
-            let tar_file = File::create(dest).unwrap();
-            let encoder = Encoder::new(tar_file, 3).unwrap();
+            let tar_file = File::create(dest)?;
+            let encoder = Encoder::new(tar_file, 3)?;
             let mut tar_builder = Builder::new(encoder);
 
             for entry in WalkDir::new(from) {
-                let entry = entry.unwrap();
+                let entry = entry?;
                 let path = entry.path();
-                let name = path.strip_prefix(Path::new(from)).unwrap();
+                let name = path.strip_prefix(Path::new(from))?;
                 if path.is_file() {
-                    tar_builder.append_path_with_name(path, name).unwrap();
+                    tar_builder.append_path_with_name(path, name)?;
                 }
             }
 
-            tar_builder.into_inner().unwrap().finish().unwrap();
+            tar_builder.into_inner()?.finish()?;
         }
     }
     Ok(())
