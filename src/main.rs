@@ -44,7 +44,7 @@ fn zip_dir<T>(it: &mut dyn Iterator<Item=DirEntry>, prefix: &str, writer: T) -> 
             f.read_to_end(&mut buffer)?;
             zip.write_all(&buffer)?;
             buffer.clear();
-        } else if !name.is_empty() {
+        } else if !name.as_os_str().is_empty() {
             println!("adding dir {:?} as {:?} ...", path, name);
             // zip.add_directory_from_path(name, options)?;
             zip.add_directory(name.to_string_lossy(), options)?;
