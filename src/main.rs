@@ -42,9 +42,9 @@ fn zip_dir<T>(it: &mut dyn Iterator<Item=DirEntry>, prefix: &str, writer: T) -> 
             let mut f = File::open(path)?;
  
             f.read_to_end(&mut buffer)?;
-            zip.write_all(&*buffer)?;
+            zip.write_all(&buffer)?;
             buffer.clear();
-        } else if name.as_os_str().len() != 0 {
+        } else if !name.is_empty() {
             println!("adding dir {:?} as {:?} ...", path, name);
             // zip.add_directory_from_path(name, options)?;
             zip.add_directory(name.to_string_lossy(), options)?;
