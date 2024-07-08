@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
+        platform: [macos-latest, ubuntu-20.04]
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -34,13 +34,6 @@ jobs:
 
       - name: Build App
         run: cargo build -r
-
-      - name: Upload Artifact (windows)
-        if: matrix.platform == 'windows-latest'
-        uses: actions/upload-artifact@v3
-        with:
-          name: ButInRust-build-windows
-          path: ./target/release/*.exe
 
 
       - name: Upload Artifact (macos)
