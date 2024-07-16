@@ -38,7 +38,7 @@ fn zip_dir<T>(it: &mut dyn Iterator<Item=DirEntry>, prefix: &str, writer: T) -> 
         if path.is_file() {
             println!("adding file {:?} as {:?} ...", path, name);
             // zip.start_file_from_path(name, options)?;
-            zip.start_file(name.to_string_lossy(), options)?;
+            zip.start_file::<Cow<'_, str>, T>(name.to_string_lossy(), options)?;
             let mut f = File::open(path)?;
  
             f.read_to_end(&mut buffer)?;
