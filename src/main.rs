@@ -26,7 +26,7 @@ fn compress_dir(src_dir: &str, target: &str) {
 fn zip_dir<T>(it: &mut dyn Iterator<Item=DirEntry>, prefix: &str, writer: T) -> zip::result::ZipResult<()>
     where T: Write + Seek {
     let mut zip = zip::ZipWriter::new(writer);
-    let options = FileOptions::default()
+    let options: FileOptions<_> = FileOptions::default()
         .compression_method(zip::CompressionMethod::Stored);
  
     let mut buffer = Vec::new();
