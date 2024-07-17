@@ -12,7 +12,7 @@ use std::path::Path;
 use std::str;
  
 use walkdir::{DirEntry, WalkDir};
-use zip::write::{FileOptions, FileOptionExtension};
+use zip::write::{ExtendedFileOptions, FileOptions};
 
 
 // 参考：https://blog.csdn.net/u013195275/article/details/105973490
@@ -26,9 +26,8 @@ fn compress_dir(src_dir: &str, target: &str) {
 fn zip_dir<T>(it: &mut dyn Iterator<Item=DirEntry>, prefix: &str, writer: T) -> zip::result::ZipResult<()>
     where T: Write + Seek {
     let mut zip = zip::ZipWriter::new(writer);
-    let options: FileOptions<_> = FileOptions::default()
+    let options: FileOptions<ExtendedFileOptions> = FileOptions::default()
         .compression_method(zip::CompressionMethod::Stored);
- 
     let mut buffer = Vec::new();
     for entry in it {
         let path = entry.path();
@@ -38,7 +37,7 @@ fn zip_dir<T>(it: &mut dyn Iterator<Item=DirEntry>, prefix: &str, writer: T) -> 
         if path.is_file() {
             println!("adding file {:?} as {:?} ...", path, name);
             // zip.start_file_from_path(name, options)?;
-            zip.start_file::<Cow<'_, str>, Box<dyn FileOptionExtension>>(name.to_string_lossy(), options)?;
+            zip.start_file(name.to_string_lossy(), options.clone())?;
             let mut f = File::open(path)?;
  
             f.read_to_end(&mut buffer)?;
@@ -47,7 +46,7 @@ fn zip_dir<T>(it: &mut dyn Iterator<Item=DirEntry>, prefix: &str, writer: T) -> 
         } else if !name.as_os_str().is_empty() {
             println!("adding dir {:?} as {:?} ...", path, name);
             // zip.add_directory_from_path(name, options)?;
-            zip.add_directory(name.to_string_lossy(), options)?;
+            zip.add_directory(name.to_string_lossy(), options.clone())?;
         }
     }
     zip.finish()?;
