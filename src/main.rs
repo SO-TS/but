@@ -76,8 +76,8 @@ struct Settings {
 
 fn about() {
     println!("but v0.2，文件夹备份工具。");
-    println!("@Stevesuk0，版本：0.2");
-    println!("refactor by @liulyxandy-codemao");
+    println!("by @SO-TS (github.com/SO-TS)");
+    println!("在 https://github.com/SO-TS/but/issues 上反馈 Bugs 或 Feature Requests。");
 }
 
 fn init_config() {
@@ -171,7 +171,7 @@ fn help() {
     println!(
         r#"but - 使用方法:
 
-配置操作:
+    -v, --version, --about 显示关于信息
     -i, -g, --init         生成配置文件
 
 无参数启动将开始直接备份。
